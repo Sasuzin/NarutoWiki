@@ -67,7 +67,7 @@ export function CharacterDetail({ rawId, space }: { rawId: string; space: IdSpac
             <div className={styles.gallery}>
               {model.images.map((src, i) => (
                 <button
-                  key={src}
+                  key={`${i}-${src}`}
                   type="button"
                   className={styles.thumb}
                   style={{ backgroundImage: `url("${src}")` }}

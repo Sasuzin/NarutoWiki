@@ -11,6 +11,15 @@ interface FieldDef {
   options: string[];
 }
 
+/**
+ * A API repete nome em coleccao diferente: existem dois registros "Hyūga",
+ * dois "Uzumaki", dois "Senju". O filtro casa por nome, entao a opcao
+ * duplicada nao filtraria nada de novo — some da lista.
+ */
+function uniqueNames(items: { name: string }[]): string[] {
+  return [...new Set(items.map((i) => i.name))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+
 /** Os cinco filtros combinados. As opcoes saem do que a API trouxe, nao de lista fixa. */
 export function FilterBar() {
   const dex = useDex();
@@ -18,18 +27,8 @@ export function FilterBar() {
 
   const fields = useMemo<FieldDef[]>(
     () => [
-      {
-        key: "village",
-        label: "Vila",
-        all: "Todas",
-        options: dex.villages.map((v) => v.name).sort((a, b) => a.localeCompare(b, "pt-BR")),
-      },
-      {
-        key: "clan",
-        label: "Clã",
-        all: "Todos",
-        options: dex.clans.map((c) => c.name).sort((a, b) => a.localeCompare(b, "pt-BR")),
-      },
+      { key: "village", label: "Vila", all: "Todas", options: uniqueNames(dex.villages) },
+      { key: "clan", label: "Clã", all: "Todos", options: uniqueNames(dex.clans) },
       { key: "nature", label: "Natureza", all: "Todas", options: dex.natures },
       { key: "rank", label: "Rank", all: "Todos", options: dex.ranks },
       { key: "status", label: "Status", all: "Todos", options: dex.statuses },

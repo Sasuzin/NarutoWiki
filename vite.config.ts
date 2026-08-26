@@ -6,5 +6,4 @@ export default defineConfig({
   // Base relativa: o build funciona servido de subpasta (GitHub Pages etc.)
   // sem quebrar as rotas, porque a navegacao inteira e por hash.
   base: "./",
-  server: { open: true },
 });
