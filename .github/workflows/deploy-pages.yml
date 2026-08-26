@@ -40,6 +40,10 @@ jobs:
 
       - name: Configurar Pages
         uses: actions/configure-pages@v6
+        with:
+          # Liga o Pages no repositório na primeira execução, em vez de exigir
+          # o clique em Settings -> Pages -> Source: GitHub Actions.
+          enablement: true
 
       - name: Subir o dist como artefato
         uses: actions/upload-pages-artifact@v5
