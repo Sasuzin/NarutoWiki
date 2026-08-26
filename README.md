@@ -1,5 +1,7 @@
 # NaruWiki
 
+**No ar: <https://sasuzin.github.io/NarutoWiki/>**
+
 Enciclopédia ninja sobre a [API Dattebayo](https://dattebayo-api.onrender.com): dashboard,
 catálogo de personagens com busca, filtros e ordenação, ficha por personagem, coleções
 (vilas, clãs, times, kekkei genkai, bestas com cauda, Akatsuki, Kara), favoritos, comparador
@@ -53,13 +55,22 @@ com `base: "./"`, o que também deixa publicar de subpasta.
 na `main` (e sob demanda pela aba **Actions**). Roda `npm ci`, `npm run build` — que inclui o
 typecheck, então erro de tipo derruba a publicação — e manda o `dist/` para o Pages.
 
-Não precisa de configuração manual nem de secret: o passo `actions/configure-pages` roda com
-`enablement: true`, então ele mesmo liga o Pages no repositório na primeira execução, usando o
+No ar em **<https://sasuzin.github.io/NarutoWiki/>**. Não precisa de secret: o workflow usa o
 `GITHUB_TOKEN` com `pages: write` e `id-token: write`.
 
-Se algum dia quiser voltar a controlar isso na mão, tire o `enablement: true` e ligue a fonte
-em **Settings → Pages → Build and deployment → Source: GitHub Actions** — sem um dos dois, o
-passo falha com `Get Pages site failed … Not Found`.
+O passo `actions/configure-pages` roda com `enablement: true`, mas vale saber o limite: **essa
+flag não cria o site do zero com o `GITHUB_TOKEN` padrão** — a API de criar Pages exige
+direito de admin e responde `Resource not accessible by integration`. Este repositório teve o
+Pages ligado uma vez por fora:
+
+```bash
+gh api -X POST repos/Sasuzin/NarutoWiki/pages -f build_type=workflow
+```
+
+Num fork novo, faça o equivalente: ou o comando acima, ou
+**Settings → Pages → Build and deployment → Source: GitHub Actions**, ou passe um PAT com
+admin em `token:` no passo. Com o site já existindo, `enablement: true` é inofensivo — a ação
+só faz o GET e segue.
 
 O site sai em `https://<usuário>.github.io/<repositório>/`. A subpasta não quebra nada —
 `base: "./"` faz os assets resolverem relativos ao `index.html`, e as rotas por hash

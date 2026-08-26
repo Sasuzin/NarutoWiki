@@ -41,8 +41,13 @@ jobs:
       - name: Configurar Pages
         uses: actions/configure-pages@v6
         with:
-          # Liga o Pages no repositório na primeira execução, em vez de exigir
-          # o clique em Settings -> Pages -> Source: GitHub Actions.
+          # Reaproveita o Pages ja ligado no repositorio. Atencao: esta flag NAO
+          # consegue criar o site do zero com o GITHUB_TOKEN padrao — a API de
+          # criar Pages exige direito de admin e responde "Resource not
+          # accessible by integration". Este repositorio foi ligado uma vez por
+          # fora (POST /repos/:owner/:repo/pages com build_type=workflow); num
+          # fork novo, ligue em Settings -> Pages -> Source: GitHub Actions, ou
+          # passe um PAT com admin em `token:` aqui.
           enablement: true
 
       - name: Subir o dist como artefato
