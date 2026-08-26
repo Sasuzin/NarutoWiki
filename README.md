@@ -54,8 +54,16 @@ na `main` (e sob demanda pela aba **Actions**). Roda `npm ci`, `npm run build` �
 typecheck, então erro de tipo derruba a publicação — e manda o `dist/` para o Pages.
 
 Antes do primeiro deploy, ligue a fonte uma vez em
-**Settings → Pages → Build and deployment → Source: GitHub Actions**. Não precisa de secret:
-o workflow usa o `GITHUB_TOKEN` com `pages: write` e `id-token: write`.
+**Settings → Pages → Build and deployment → Source: GitHub Actions**. Enquanto isso não for
+feito, o passo *Configurar Pages* falha com `Get Pages site failed … Not Found` — é o único
+motivo pelo qual o workflow quebra num repositório recém-configurado.
+
+Se preferir que o próprio workflow ligue o Pages em vez de você clicar, dê
+`with: { enablement: true }` no passo `actions/configure-pages`. Deixei desligado de
+propósito: publicar o site é uma decisão sua, não efeito colateral de um push.
+
+Não precisa de secret — o workflow usa o `GITHUB_TOKEN` com `pages: write` e
+`id-token: write`.
 
 O site sai em `https://<usuário>.github.io/<repositório>/`. A subpasta não quebra nada —
 `base: "./"` faz os assets resolverem relativos ao `index.html`, e as rotas por hash
