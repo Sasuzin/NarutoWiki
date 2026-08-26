@@ -43,9 +43,23 @@ Abre em `http://localhost:5173`.
 ## Publicando
 
 `npm run build` gera um `dist/` estático — hoje 241 kB de JS e 26 kB de CSS, cerca de 82 kB
-no total com gzip. Serve em qualquer host de arquivo — GitHub Pages, Netlify, Vercel, S3, nginx — **sem
-nenhuma regra de rewrite**, porque a navegação inteira é por hash e o Vite está com
-`base: "./"`, o que também deixa publicar de subpasta.
+no total com gzip. Serve em qualquer host de arquivo — GitHub Pages, Netlify, Vercel, S3,
+nginx — **sem nenhuma regra de rewrite**, porque a navegação inteira é por hash e o Vite está
+com `base: "./"`, o que também deixa publicar de subpasta.
+
+### GitHub Pages
+
+[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) publica a cada push
+na `main` (e sob demanda pela aba **Actions**). Roda `npm ci`, `npm run build` — que inclui o
+typecheck, então erro de tipo derruba a publicação — e manda o `dist/` para o Pages.
+
+Antes do primeiro deploy, ligue a fonte uma vez em
+**Settings → Pages → Build and deployment → Source: GitHub Actions**. Não precisa de secret:
+o workflow usa o `GITHUB_TOKEN` com `pages: write` e `id-token: write`.
+
+O site sai em `https://<usuário>.github.io/<repositório>/`. A subpasta não quebra nada —
+`base: "./"` faz os assets resolverem relativos ao `index.html`, e as rotas por hash
+sobrevivem a um F5 em qualquer URL profunda.
 
 ## Stack
 
