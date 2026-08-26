@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from "react";
 import type { Dex } from "../data/dex";
 import { EMPTY_FILTERS, type Filters, type SortKey } from "../data/filters";
+import { drawQuestion, type QuizQuestion } from "../data/quiz";
 import { href, type Route } from "../data/routes";
 import { useDataset, type ApiStatus } from "../hooks/useDataset";
 import { useFavorites } from "../hooks/useFavorites";
@@ -50,6 +51,16 @@ interface AppValue {
   compare: CompareSlots;
   setCompareSlot: (slot: 0 | 1, id: number | null) => void;
   addToCompare: (id: number) => void;
+
+  /** Quiz vive aqui, e nao na tela, para o placar sobreviver a navegacao. */
+  quiz: {
+    question: QuizQuestion | null;
+    pick: number | null;
+    ok: number;
+    total: number;
+  };
+  answerQuiz: (id: number) => void;
+  nextQuiz: () => void;
 }
 
 const AppContext = createContext<AppValue | null>(null);
@@ -66,6 +77,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("name");
   const [compare, setCompare] = useState<CompareSlots>([null, null]);
+
+  const [question, setQuestion] = useState<QuizQuestion | null>(null);
+  const [pick, setPick] = useState<number | null>(null);
+  const [score, setScore] = useState({ ok: 0, total: 0 });
 
   // Trocar de rota fecha o menu e o dropdown de busca.
   useEffect(() => {
@@ -98,6 +113,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
     location.hash = href.compare;
   }, []);
+
+  const nextQuiz = useCallback(() => {
+    if (!dex) return;
+    setQuestion(drawQuestion(dex.quizPool));
+    setPick(null);
+  }, [dex]);
+
+  // Primeira pergunta sorteada assim que os dados chegam.
+  useEffect(() => {
+    if (dex && !question) nextQuiz();
+  }, [dex, question, nextQuiz]);
+
+  const answerQuiz = useCallback(
+    (id: number) => {
+      if (pick !== null || !question) return;
+      setPick(id);
+      setScore((s) => ({
+        ok: s.ok + (id === question.targetId ? 1 : 0),
+        total: s.total + 1,
+      }));
+    },
+    [pick, question],
+  );
+
+  const quiz = useMemo(
+    () => ({ question, pick, ok: score.ok, total: score.total }),
+    [question, pick, score],
+  );
 
   const value = useMemo<AppValue>(
     () => ({
@@ -133,6 +176,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       compare,
       setCompareSlot,
       addToCompare,
+      quiz,
+      answerQuiz,
+      nextQuiz,
     }),
     [
       dex,
@@ -157,6 +203,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       compare,
       setCompareSlot,
       addToCompare,
+      quiz,
+      answerQuiz,
+      nextQuiz,
     ],
   );
 
