@@ -8,6 +8,14 @@ de dois personagens e um quiz "quem é esse ninja?".
 Tema claro (paleta Naruto, laranja/amarelo) e escuro (paleta Sasuke, índigo/violeta),
 alternável na topbar e persistido.
 
+## Requisitos
+
+**Node.js `^20.19` ou `>=22.12`** (exigência do Vite 8) e npm 10+. Não precisa de banco,
+backend, variável de ambiente nem chave de API — a base fica em `src/api/client.ts` e a API
+Dattebayo é pública, com CORS liberado.
+
+Verificado em Node 24.14 / npm 11.11, Windows 11.
+
 ## Rodando
 
 ```bash
@@ -18,12 +26,26 @@ npm install
 npm run dev
 ```
 
-Outros scripts: `npm run build` (typecheck + build de produção em `dist/`),
-`npm run preview`, `npm run typecheck`.
+Abre em `http://localhost:5173`.
+
+| Script | O que faz |
+| --- | --- |
+| `npm run dev` | Servidor de desenvolvimento com HMR |
+| `npm run build` | `tsc --noEmit` e, se passar, build de produção em `dist/` |
+| `npm run preview` | Serve o `dist/` para conferir o build |
+| `npm run typecheck` | Só o typecheck, sem gerar nada |
 
 > A API roda no plano gratuito do Render e **hiberna**: a primeira requisição pode levar
 > 10–40s. A tela de carregamento troca a mensagem depois de 4,5s para avisar isso, e o erro
-> tem botão de repetir.
+> tem botão de repetir. O cliente espera até 90s antes de desistir — um timeout curto
+> mataria justamente a chamada que estava acordando o servidor.
+
+## Publicando
+
+`npm run build` gera um `dist/` estático — hoje 241 kB de JS e 26 kB de CSS, cerca de 82 kB
+no total com gzip. Serve em qualquer host de arquivo — GitHub Pages, Netlify, Vercel, S3, nginx — **sem
+nenhuma regra de rewrite**, porque a navegação inteira é por hash e o Vite está com
+`base: "./"`, o que também deixa publicar de subpasta.
 
 ## Stack
 
@@ -34,8 +56,20 @@ Outros scripts: `npm run build` (typecheck + build de produção em `dist/`),
 | Estilo | CSS puro — tokens globais + CSS Modules | A paleta do handoff é definida como variável CSS e nenhum componente escreve cor literal; trocar tema é só trocar `data-theme` no `<html>`. |
 | Estado | Context + hooks | Nada de biblioteca: o estado é pequeno (dataset, rota, tema, favoritos, filtros, comparador, quiz). |
 
-Sem dependência de runtime além de `react` e `react-dom`. Nenhuma biblioteca de ícone: os
-únicos glifos são `≡ ✕ ⌕ ★ ☆ ☾ ☀ ← ·` em texto.
+Versões em uso:
+
+| Pacote | Versão | Papel |
+| --- | --- | --- |
+| `react` / `react-dom` | 19.2 | as duas únicas dependências de runtime |
+| `vite` | 8.2 | dev server e build |
+| `@vitejs/plugin-react` | 6.1 | JSX e Fast Refresh |
+| `typescript` | 7.0 | só typecheck (`noEmit`); o Vite transpila |
+
+Nenhuma biblioteca de ícone, de UI, de roteamento, de estado ou de requisição: os únicos
+glifos são `≡ ✕ ⌕ ★ ☆ ☾ ☀ ← ·` em texto, as rotas saem de `hashchange` e os dados de `fetch`.
+
+O `tsconfig.json` está no modo estrito completo, mais `noUnusedLocals`,
+`noUnusedParameters`, `noImplicitOverride` e `verbatimModuleSyntax`.
 
 ## Arquitetura
 
@@ -56,6 +90,22 @@ src/
 A regra que organiza tudo: **`src/data/` é lógica pura sobre os dados** (sem React) e
 **`src/pages/` só renderiza**. Filtro, ordenação, ficha, comparador e quiz são funções
 testáveis que recebem o índice e devolvem dados prontos.
+
+### O que acontece ao abrir o app
+
+1. **Antes da primeira pintura**, um script inline no `index.html` lê
+   `localStorage["naruwiki:theme"]` (ou a preferência do sistema) e escreve `data-theme` no
+   `<html>` — por isso quem usa o tema escuro não vê o claro piscar.
+2. `main.tsx` monta `<AppProvider>`, que é onde vive todo o estado da sessão.
+3. `useDataset` dispara **as oito chamadas em paralelo**. Um timer de 4,5s troca a mensagem de
+   carregamento; a tela mostra título fantasma e 12 cards pulsando.
+4. Chegando a resposta, `new Dex(dataset)` monta os índices — mapas por id, por nome
+   normalizado, vila/clã/time/kekkei por personagem, listas de opção de filtro e o pool do
+   quiz. É a única passada cara sobre os 1431 registros, e roda uma vez.
+5. `useHashRoute` traduz o hash em `{ name, id }` e o `Router` escolhe a tela. **Daqui em
+   diante nada mais vai à rede**: busca, filtro, ordenação e paginação são todos em memória.
+6. Se qualquer uma das oito chamadas falhar, a tela inteira vira um card de erro com
+   "Tentar de novo", que refaz as oito.
 
 ### Uma única carga
 
@@ -97,11 +147,33 @@ atrás (`components/ImageLayer.tsx`). Se a URL falhar, nada pinta e o monograma 
 sozinho — **sem `onerror` e sem ícone quebrado**. Isso importa: 86 dos 1431 personagens não
 têm imagem, e hoje 16 das 39 vilas não têm arquivo de símbolo no Naruto Wiki.
 
-## Rotas
+## Telas e rotas
 
-`#/` · `#/personagens` · `#/personagens/:id` · `#/vilas[/:id]` · `#/clas[/:id]` ·
-`#/times[/:id]` · `#/kekkei[/:id]` · `#/bestas[/:id]` · `#/akatsuki` · `#/kara` ·
-`#/favoritos` · `#/comparar` · `#/quiz`
+| Rota | Tela | O que tem |
+| --- | --- | --- |
+| `#/` | `Home` | 4 stat cards, as cinco grandes vilas, Time 7 em destaque e os 8 clãs com mais membros |
+| `#/personagens` | `Characters` | Grade do elenco com 5 filtros combinados (vila, clã, natureza, rank, status), 5 ordenações e "Mostrar mais (40)" |
+| `#/personagens/:id` | `CharacterDetail` | Ficha: galeria, atributos, família com link, vínculos, estreia, dubladores, chips de jutsu/naturezas/títulos, "Também de <vila>" |
+| `#/vilas`, `#/clas`, `#/times`, `#/kekkei` | `Collection` | Lista da coleção; com `/:id`, o cabeçalho do registro e a grade dos seus personagens |
+| `#/bestas` | `Roster` | Os 10 bijū, sem estrela de favorito |
+| `#/bestas/:id` | `CharacterDetail` | Mesma ficha, em modo `beast` (sem vínculos de personagem) |
+| `#/akatsuki`, `#/kara` | `Roster` | Membros das organizações |
+| `#/favoritos` | `Favorites` | O que está salvo neste navegador |
+| `#/comparar` | `Compare` | Dois personagens lado a lado em 14 atributos |
+| `#/quiz` | `Quiz` | "Quem é esse ninja?" com a imagem em silhueta e 4 alternativas |
+
+Fora das telas, presentes em todas: topbar fixa com busca global (dropdown de 6 personagens
+mais 3 de cada coleção), indicador de status da API, botão de tema, e o menu sanduíche —
+drawer de 250px que é overlay **em qualquer largura**, com scrim clicável e `Esc`.
+
+Rota desconhecida cai no dashboard; id inexistente mostra estado vazio com link de volta.
+
+### Responsivo
+
+Uma única quebra, em **900px**: somem a marca e o status da topbar, o padding do main cai de
+24px para 16px, as grades de duas colunas viram uma e os stat cards viram 2×2. As grades de
+card não dependem de media query — são `auto-fill minmax(…, 1fr)` e se ajustam sozinhas
+(`--card-min`, 170px por padrão).
 
 O `Router` remonta a tela por `key` a cada navegação — é o que reseta paginação, chips
 expandidos e miniatura escolhida sem nenhum efeito manual. Placar do quiz e slots do
