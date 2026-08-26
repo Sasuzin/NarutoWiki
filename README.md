@@ -120,6 +120,13 @@ comparador ficam no provider, justamente para sobreviverem à navegação.
 | tema | `localStorage["naruwiki:theme"]` — `"light"` / `"dark"`; sem valor salvo, segue o sistema |
 | comparador e quiz | memória (o placar não persiste entre recarregamentos) |
 
+## Especificação de origem
+
+O handoff de design que originou este projeto está guardado em
+[`docs/handoff-naruwiki.md`](docs/handoff-naruwiki.md) — endpoints, formato dos dados,
+armadilhas da API, tokens de cor, tipografia e o layout de cada tela. É documento de
+referência: fica como veio, não acompanha o código.
+
 ## Onde esta implementação difere do protótipo de design
 
 Decisões conscientes, todas reversíveis:
