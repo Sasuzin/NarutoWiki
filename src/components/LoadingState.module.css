@@ -1,0 +1,40 @@
+.ghostTitle {
+  height: 22px;
+  width: 220px;
+  background: var(--line);
+  border-radius: 6px;
+  animation: dbPulse 1.2s ease-in-out infinite;
+}
+
+.note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  animation: dbPulse 1.2s ease-in-out infinite;
+}
+
+.thumb {
+  aspect-ratio: 3 / 4;
+  background: var(--surface-alt);
+}
+
+.line {
+  margin: 12px;
+  height: 12px;
+  background: var(--line);
+  border-radius: 4px;
+}

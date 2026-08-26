@@ -1,0 +1,79 @@
+/* Paletas do handoff. Nenhum componente escreve cor literal: tudo sai daqui. */
+
+:root {
+  /* Tema claro — Naruto (laranja/amarelo) */
+  --brand: #e07b12;
+  --brand-dark: #b45e05;
+  --brand-soft: #fdf0dc;
+  --brand-soft-2: #f8e1bb;
+  --on-brand: #ffffff;
+
+  --bg: #f3efe6;
+  --surface: #ffffff;
+  --surface-alt: #faf6ee;
+
+  --line: #e4ddcd;
+  --line-2: #d4cab5;
+
+  --ink: #231d14;
+  --muted: #6b6153;
+  --faint: #9a907e;
+
+  --ok-bg: #e8f1e6;
+  --ok-fg: #3f7a2e;
+  --warn-bg: #fdf0dc;
+  --warn-fg: #b45e05;
+  --bad-bg: #fbe7e2;
+  --bad-fg: #c0392b;
+  --info-bg: #e7f1ea;
+  --info-fg: #2f6b4f;
+
+  /* Cabelo da marca (unicos literais fora da paleta, sao arte) */
+  --hair-light: #f2b705;
+  --hair-dark: #3e3b78;
+
+  /* Sombras: so em overlay, card nunca tem */
+  --shadow-pop: 0 12px 32px rgba(11, 18, 25, 0.14);
+  --shadow-drawer: 0 24px 64px rgba(6, 4, 14, 0.28);
+  --scrim: rgba(8, 6, 16, 0.46);
+
+  /* Forma */
+  --r-card: 10px;
+  --r-control: 8px;
+  --r-thumb: 7px;
+  --card-min: 170px;
+  --content-max: 1340px;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* Tema escuro — Sasuke (indigo/violeta) */
+  --brand: #8b7cf0;
+  --brand-dark: #a99cf7;
+  --brand-soft: #221d46;
+  --brand-soft-2: #2c2660;
+  --on-brand: #0c0a18;
+
+  --bg: #0c0a17;
+  --surface: #141126;
+  --surface-alt: #1b1733;
+
+  --line: #282350;
+  --line-2: #37305f;
+
+  --ink: #e9e7f7;
+  --muted: #a49dc9;
+  --faint: #726ba0;
+
+  --ok-bg: #132d26;
+  --ok-fg: #5bc79a;
+  --warn-bg: #2f2413;
+  --warn-fg: #e0ae5e;
+  --bad-bg: #331525;
+  --bad-fg: #f0748c;
+  --info-bg: #1a2547;
+  --info-fg: #7fa6f5;
+
+  color-scheme: dark;
+}

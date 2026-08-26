@@ -1,0 +1,177 @@
+.slots {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.slotHead {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--surface-alt);
+  padding: 0 10px;
+  font-size: 13px;
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--brand);
+  background: var(--surface);
+  outline: none;
+}
+
+.swap {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  flex: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.swap:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.results {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.result {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.15s ease;
+}
+
+.result:hover {
+  background: var(--surface-alt);
+}
+
+.resultTile {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface-alt);
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--faint);
+}
+
+.picked {
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.pickedThumb {
+  position: relative;
+  width: 76px;
+  height: 96px;
+  flex: 0 0 76px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--surface-alt);
+  display: grid;
+  place-items: center;
+}
+
+.pickedInitials {
+  position: absolute;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--faint);
+}
+
+.pickedText {
+  min-width: 0;
+}
+
+.pickedName {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.pickedSub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.table {
+  margin-top: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 148px 1fr;
+  gap: 12px;
+  padding: 11px 16px;
+  border-top: 1px solid var(--line);
+  align-items: baseline;
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.valueA {
+  font-size: 13px;
+  text-align: right;
+  line-height: 1.45;
+}
+
+.rowLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--faint);
+  text-align: center;
+}
+
+.valueB {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .slots {
+    grid-template-columns: 1fr;
+  }
+}

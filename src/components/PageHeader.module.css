@@ -1,0 +1,31 @@
+.back {
+  margin-bottom: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.tile {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-card);
+  background: var(--brand-soft);
+}
+
+.tileInitials {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.text {
+  min-width: 0;
+}

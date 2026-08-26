@@ -1,0 +1,71 @@
+.tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-weight: 700;
+  flex: none;
+}
+
+.sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.md {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  font-size: 16px;
+}
+
+/* O cabelo sai por cima do quadrado: overflow visivel e sem captar clique. */
+.hair {
+  position: absolute;
+  left: -4px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.sm .hair {
+  top: -8px;
+  width: 38px;
+}
+
+.md .hair {
+  top: -9px;
+  width: 42px;
+}
+
+.sm .hairLight {
+  height: 14px;
+}
+
+.md .hairLight {
+  height: 16px;
+}
+
+.sm .hairDark {
+  height: 27px;
+}
+
+.md .hairDark {
+  height: 30px;
+}
+
+/* Claro = espetos amarelos; escuro = topete com duas mechas pelas laterais.
+   A troca e so CSS, o SVG dos dois esta sempre no DOM. */
+.hairDark {
+  display: none;
+}
+
+:global(html[data-theme="dark"]) .hairLight {
+  display: none;
+}
+
+:global(html[data-theme="dark"]) .hairDark {
+  display: block;
+}

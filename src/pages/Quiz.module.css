@@ -1,0 +1,110 @@
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.score {
+  text-align: right;
+}
+
+.scoreValue {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.board {
+  margin-top: 16px;
+}
+
+.stage {
+  position: relative;
+  height: 330px;
+  background: var(--surface-alt);
+  display: grid;
+  place-items: center;
+}
+
+/* A silhueta some quando a resposta e dada. */
+.figure {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.35) contrast(1.4) grayscale(1);
+  transition: filter 0.25s ease;
+}
+
+.figure[data-revealed="true"] {
+  filter: none;
+}
+
+.options {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.option:hover:not([data-state]) {
+  border-color: var(--brand);
+}
+
+.option[data-state="right"] {
+  border-color: transparent;
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+}
+
+.option[data-state="wrong"] {
+  border-color: transparent;
+  background: var(--bad-bg);
+  color: var(--bad-fg);
+}
+
+.option[data-state="dim"] {
+  color: var(--faint);
+}
+
+.footer {
+  padding: 0 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feedback {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.empty {
+  margin-top: 16px;
+  padding: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}

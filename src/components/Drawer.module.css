@@ -1,0 +1,147 @@
+/* Drawer em qualquer largura, sempre atras do sanduiche — nunca virou sidebar
+   fixa no desktop. Fica fora da tela por transform, nao por display, para a
+   transicao existir nos dois sentidos. */
+.drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  width: 250px;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  transform: translateX(-100%);
+  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer[data-open="true"] {
+  transform: none;
+  box-shadow: var(--shadow-drawer);
+}
+
+.header {
+  padding: 16px 14px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  color: var(--ink);
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.brandText {
+  display: block;
+  min-width: 0;
+}
+
+.brandName {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.brandSub {
+  display: block;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.close {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.close:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.nav {
+  padding: 10px 10px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 36px;
+  padding: 0 11px;
+  border-radius: var(--r-control);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.item:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.item[aria-current="page"] {
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--faint);
+}
+
+.item[aria-current="page"] .count {
+  color: var(--brand);
+}
+
+.footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+}
+
+.credit {
+  font-size: 10px;
+  color: var(--faint);
+  line-height: 1.55;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  background: var(--scrim);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  animation: dbUp 0.16s ease;
+}
